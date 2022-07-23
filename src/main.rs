@@ -49,6 +49,10 @@ fn get_random_number(min: i32, max: i32) -> i32 {
     }
 }
 fn find_odd_islander(islanders: &Vec<Islander>) -> Simres {
+    unsafe {
+        // reset seesaw counter
+        SEESAW_COUNTER = 0;
+    }
     let left = &islanders[0..4];
     let right = &islanders[4..8];
     let sideline = &islanders[8..12];
@@ -317,5 +321,46 @@ fn handle_left_heavy(left: &[Islander], right: &[Islander], sideline: &[Islander
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    // Note this useful idiom: importing names from outer (for mod tests) scope.
+    use super::*;
+
+    #[test]
+    fn test_find_odd_islander() {
+        // test all variants of lighter islander
+        for i in 0..12 {
+            let islanders = get_test_islanders(i, 80);
+            let result = find_odd_islander(&islanders);
+            assert_eq!(result.islander.name, islanders[i].name);
+            assert_eq!(result.islander.weight, 80);
+            assert_eq!(result.diff, "light");
+            assert_eq!(result.number_of_seesaw_measurements, 3);
+        }
+        // test all variants of heavier islander
+        for i in 0..12 {
+            let islanders = get_test_islanders(i, 120);
+            let result = find_odd_islander(&islanders);
+            assert_eq!(result.islander.name, islanders[i].name);
+            assert_eq!(result.islander.weight, 120);
+            assert_eq!(result.diff, "heavy");
+            assert_eq!(result.number_of_seesaw_measurements, 3);
+        }
+    }
+
+    fn get_test_islanders(index_odd_one: usize, weight: i32) -> Vec<Islander> {
+        let mut islanders: Vec<Islander> = Vec::new();
+        for i in 0..12 {
+            let islander = Islander {
+                name: (i + 1).to_string(),
+                weight: DEFAULT_WEIGHT,
+            };
+            islanders.push(islander);
+        }
+        islanders[index_odd_one].weight = weight;
+        islanders
     }
 }
