@@ -53,6 +53,7 @@ fn find_odd_islander(islanders: &Vec<Islander>) -> Simres {
         // reset seesaw counter
         SEESAW_COUNTER = 0;
     }
+    println!("the islanders are: {:?}", islanders);
     let left = &islanders[0..4];
     let right = &islanders[4..8];
     let sideline = &islanders[8..12];
