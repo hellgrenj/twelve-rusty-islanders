@@ -79,7 +79,7 @@ enum SeesawResult {
 }
 fn seesaw(left: &[Islander], right: &[Islander]) -> SeesawResult {
     unsafe {
-        // its fine tho...this program only ever use the one thread
+        // its fine tho...this program is single threaded
         SEESAW_COUNTER += 1;
     }
     let total_left = left.iter().fold(0, |acc, islander| acc + islander.weight);
@@ -130,7 +130,8 @@ fn handle_balanced(right: &[Islander], sideline: &[Islander]) -> Simres {
             // sideline 2: L1 L2 L3 S4 L4 R4
             let left_2_2 = &left_2[0..=0]; // S1
             let right_2_2 = &left_2[1..=1]; // S2
-                                            // compare S1 with S2
+
+            // compare S1 with S2
             let result_2_2 = seesaw(left_2_2, right_2_2);
             match result_2_2 {
                 SeesawResult::Balanced => {
@@ -166,7 +167,7 @@ fn handle_balanced(right: &[Islander], sideline: &[Islander]) -> Simres {
             let left_2_3 = &left_2[0..=0]; // S1
             let right_2_3 = &left_2[1..=1]; // S2
 
-            // // compare S1 and S2
+            // compare S1 and S2
             let result_2_3 = seesaw(left_2_3, right_2_3);
             match result_2_3 {
                 SeesawResult::Balanced => {
@@ -226,7 +227,8 @@ fn handle_left_heavy(left: &[Islander], right: &[Islander], sideline: &[Islander
             // sideline: S1 R2 R3 R4
             let left_2_1 = &left_2[1..=1]; // L2
             let right_2_1 = &left_2[2..=2]; // L3
-                                            // // now compare L2 and L3
+
+            // now compare L2 and L3
             let result_2_1 = seesaw(left_2_1, right_2_1);
             match result_2_1 {
                 SeesawResult::Balanced => {
@@ -261,7 +263,8 @@ fn handle_left_heavy(left: &[Islander], right: &[Islander], sideline: &[Islander
             // sideline: S1 *R2 R3 R4*
             let left_2_2 = &sideline_2[1..=1]; // R2
             let right_2_2 = &sideline_2[2..=2]; // R3
-                                                // now compare R2 and R3
+
+            // now compare R2 and R3
             let result_2_2 = seesaw(left_2_2, right_2_2);
             match result_2_2 {
                 SeesawResult::Balanced => {
@@ -295,13 +298,10 @@ fn handle_left_heavy(left: &[Islander], right: &[Islander], sideline: &[Islander
             // we now know it is either R1 or L1
             // seesaw: *R1* L2 L3 L4    *L1* S2 S3 S4 (heavy)
             // sideline: S1 R2 R3 R4
-            // left23 := []islander{left2[0]}
             let left_2_3 = &left_2[0..=0]; // R1
-
-            // right23 := []islander{sideline2[0]} // known neutral islander ...
             let right_2_3 = &sideline_2[0..=0]; // S1
 
-            // // now compare R1 against a neutral islander (S1 for example)
+            // now compare R1 against a neutral islander (S1 for example)
             let result_2_3 = seesaw(left_2_3, right_2_3);
             match result_2_3 {
                 SeesawResult::Balanced => {
